@@ -3,7 +3,7 @@
 projectDocs {
     owner {
         name 'Christopher J. Stehno'
-        email 'chris@stehno.com`
+        email 'chris@stehno.com'
     }
     
     features {
@@ -89,15 +89,9 @@ If the groovydoc plugin is configured:
 
 ## Tasks
 
-### `site`
-
 ### `publishSite`
 
 ### `verifySite`
-
-### `updateVersion`
-
-### `checkVersion`
 
 ### `installConfig`
 

@@ -32,10 +32,18 @@ dependencies {
     groovyDoc "org.codehaus.groovy:groovy-groovydoc:2.4.7"
     groovyDoc "org.codehaus.groovy:groovy-ant:2.4.7"
 
+    compile('io.github.http-builder-ng:http-builder-ng-core:0.14.0') {
+        exclude module: 'groovy-all'
+    }
+
     testCompile 'junit:junit:4.12'
     testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
         exclude module: 'groovy-all'
     }
+    testCompile('com.stehno.ersatz:ersatz:1.1.0') {
+        exclude module: 'groovy-all'
+    }
+
 }
 
 groovydoc {
