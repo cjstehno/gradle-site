@@ -23,6 +23,9 @@ import org.gradle.api.tasks.TaskAction
  */
 class PublishSiteTask extends DefaultTask {
 
+    // FIXME: only active when org.ajoberstar.github-pages plugin is available
+    // FIXME: need to figure out how to implement this
+
     static final String NAME = 'publishSite'
 
     @TaskAction @SuppressWarnings('GroovyUnusedDeclaration') void publishSite() {
@@ -51,4 +54,23 @@ githubPages {
     }
 }
 
+
+
+    @TaskAction void publish() {
+        if (!project.plugins.findPlugin(GithubPagesPlugin)) {
+            project.apply(plugin: 'org.ajoberstar.github-pages')
+        }
+
+        GithubPagesPluginExtension githubPages = project.extensions.findByType(GithubPagesPluginExtension)
+        githubPages.repoUri = repoUri
+        if (targetBranch) githubPages.targetBranch = targetBranch
+        githubPages.pages {
+            from(contentDir) {
+                into '.'
+            }
+        }
+
+        // FIXME: need to figure out how to actually run the task - this fails
+        Action.execute(project.tasks.findByName('publishGhPages'))
+    }
  */

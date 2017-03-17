@@ -89,10 +89,4 @@ If the groovydoc plugin is configured:
 
 ## Tasks
 
-### `publishSite`
-
-### `verifySite`
-
-### `installConfig`
-
-Downloads and/or creates the missing standard configuration files based on the configured plugins. This should generally only be run once unless plugins are added. The task should be careful to not override existing content (but log the conflict).
+* `installConfig` - Downloads and/or creates the missing standard configuration files based on the configured plugins. This should generally only be run once unless plugins are added. The task should be careful to not override existing content (but log the conflict).
