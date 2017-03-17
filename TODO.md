@@ -19,32 +19,6 @@ projectDocs {
 
 The `features` closure provides a DSL extension to allow toggling of features so that configuration may be defined in the project itself.
 
-## `license` plugin
-
-When the [`license` plugin](https://github.com/hierynomus/license-gradle-plugin) is present in the build:
-
-* ensure LICENSE and license_header exist, if not nag log
-* add `installLicense` task:
-    * if no LICENSE file exists, install one
-    * if no license_header exists, install one
-* apply the license config
-
-    license {
-        header rootProject.file('license_header.txt')
-        ext.name = projectDocs.owner.name
-        ext.email = projectDocs.owner.email
-        ext.year = Calendar.instance.get(Calendar.YEAR)
-    }
-
-## `webpreview` plugin
-
-When the Web Preview (mine) is present in the build:
-
-* apply the webpreview config
-
-    webPreview {
-        resourceDir = file('build/site')
-    }
     
 ## `jacoco` plugin (also `coveralls`)
 
@@ -86,7 +60,3 @@ If the groovydoc plugin is configured:
 * content is included in site
 
 ----
-
-## Tasks
-
-* `installConfig` - Downloads and/or creates the missing standard configuration files based on the configured plugins. This should generally only be run once unless plugins are added. The task should be careful to not override existing content (but log the conflict).

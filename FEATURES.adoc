@@ -1,0 +1,42 @@
+
+= Features
+
+== Added Tasks
+
+* site
+* verifySite
+* checkVersion
+* updateVersion
+
+== Plugin Extensions
+
+The following plugins are enhanced by the appliction of this plugin...
+
+=== Web Preview Plugin
+
+When the `com.stehno.gradle.webpreview` is applied with the Project Docs plugin, a default `webPreview` extension is applied equivalent to:
+
+[source,groovy]
+----
+webPreview {
+    resourceDir = file('build/site')
+}
+----
+
+== License Plugin
+
+When the https://github.com/hierynomus/license-gradle-plugin[`com.github.hierynomus.license`] plugin is present in the build:
+
+* If a license_header.txt file does not exist, it will be created from the stored template
+* If a LICENSE file does not exist, it will be created from the stored template
+* The default license configuration will be applied, equivalent to:
+
+[source,groovy]
+----
+license {
+    header project.file('license_header.txt')
+    ext.name = owner.name
+    ext.email = owner.email
+    ext.year = Calendar.instance.get(Calendar.YEAR)
+}
+----
