@@ -1,47 +1,104 @@
-Check for these plugins and apply my default configs (or add tasks):
 
-* license
-* jacoco
-* groovydoc
-* asciidoctor
-* coveralls
-* webpreview
-
-Add these tasks:
-
-* site task
-* publishSite
-* updateVersion
-* verifySite
-* checkVersion
-* release
-* verifyRelease
-
-Need to ensure that everything is configurable so that this works across all the projects.
-
-* ability to include other dirs in site (groovydoc, coverage, asciidoc)
-
-use the strategy of checking if the plugin is available to enable added fatures - the project will still need to apply the desired plugins but that will drive the default config
-
-```
-project {
-  owner {
-    name NAME
-    email EMAIL
-  }
-  
-  site {
-    // how to apply extra site content dirs?
-  }
-  
-  version {
-    // additional files to update/check for version
-  }
-  
-  release {
+```groovy
+projectDocs {
+    owner {
+        name 'Christopher J. Stehno'
+        email 'chris@stehno.com`
+    }
     
-  }
+    features {
+        licensing true
+        preview true
+        coverage true
+        quality true
+        docs true
+        guide true
+    }
 }
 ```
 
-Should be some means of disabling any of the provided config for cases when the project wants to use that plugin in a default manner (or configured in the project)
+The `features` closure provides a DSL extension to allow toggling of features so that configuration may be defined in the project itself.
+
+## `license` plugin
+
+When the [`license` plugin](https://github.com/hierynomus/license-gradle-plugin) is present in the build:
+
+* ensure LICENSE and license_header exist, if not nag log
+* add `installLicense` task:
+    * if no LICENSE file exists, install one
+    * if no license_header exists, install one
+* apply the license config
+
+    license {
+        header rootProject.file('license_header.txt')
+        ext.name = projectDocs.owner.name
+        ext.email = projectDocs.owner.email
+        ext.year = Calendar.instance.get(Calendar.YEAR)
+    }
+
+## `webpreview` plugin
+
+When the Web Preview (mine) is present in the build:
+
+* apply the webpreview config
+
+    webPreview {
+        resourceDir = file('build/site')
+    }
+    
+## `jacoco` plugin (also `coveralls`)
+
+When the `jacoco` plugin is present (with optional `coveralls` existence):
+
+* the reports will be included in the site build
+* apply the config
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true // if coveralls is also present
+            html.enabled = true
+        }
+    }
+
+## `codenarc` plugin
+
+If the `codenarc` plugin is present:
+
+* nag logging if the codenarc config files are not setup
+* Add `installCodeNarcConfig` to install config files
+* reports are included in site
+* apply the codenarc config (see projects)
+
+## `groovydoc` plugin
+
+If the groovydoc plugin is configured:
+
+* apply the config
+* reports are included in site
+
+## `javadoc` plugin
+
+* apply the config (including optional asciidoc)
+* reports are included in site
+
+## `asciidoctor` plugin
+
+* content is included in site
+
+----
+
+## Tasks
+
+### `site`
+
+### `publishSite`
+
+### `verifySite`
+
+### `updateVersion`
+
+### `checkVersion`
+
+### `installConfig`
+
+Downloads and/or creates the missing standard configuration files based on the configured plugins. This should generally only be run once unless plugins are added. The task should be careful to not override existing content (but log the conflict).

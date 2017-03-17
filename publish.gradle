@@ -1,0 +1,12 @@
+plugins {
+    id "org.ajoberstar.github-pages" version "1.6.0"
+}
+
+githubPages {
+    repoUri = 'git@github.com:cjstehno/gradle-project-docs'
+    pages {
+        from(file('build/site')) {
+            into '.'
+        }
+    }
+}

@@ -1,5 +1,6 @@
-# Gradle Project Plugin
+# Gradle Project Docs Plugin
 
-Project helper plugin for Gradle - provides default configuration and useful tasks.
+Gradle plugin providing helpful tools and configuration used to create and manage a project website and other documentation.
 
-This plugin will be very opinionated, since it is primarily used to share my project configurations and tasks across multiple projects. It will, hopefully, be useful to others as well.
+This plugin is primarily a collection of conventions and tasks that I use across most of my projects, therefore it is quite opinionated, but hopefully it will be useful to others as well.
+
