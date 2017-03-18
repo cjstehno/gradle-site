@@ -22,6 +22,8 @@ import spock.lang.Specification
 
 class SiteTaskSpec extends Specification implements UsesGradleBuild {
 
+    // FIXME: test reports and docs
+
     @Rule TemporaryFolder projectRoot = new TemporaryFolder()
 
     final String buildTemplate = '''

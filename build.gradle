@@ -10,6 +10,7 @@ plugins {
 }
 
 // FIXME: once I have a working version, use it for this project
+// FIXME: this should probably be renamed to the site-plugin (and remove my other site-plugin project)
 
 version = "0.0.1"
 group = "com.stehno.gradle"

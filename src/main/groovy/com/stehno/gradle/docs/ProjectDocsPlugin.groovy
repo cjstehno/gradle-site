@@ -15,75 +15,36 @@
  */
 package com.stehno.gradle.docs
 
-import groovy.transform.TypeChecked
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-import static groovy.transform.TypeCheckingMode.SKIP
-
-@TypeChecked
 class ProjectDocsPlugin implements Plugin<Project> {
 
     private static final String WEB_PREVIEW_PLUGIN_ID = 'com.stehno.gradle.webpreview'
-    private static final String LICENSE_PLUGIN_ID = 'com.github.hierynomus.license'
 
     @Override
     void apply(final Project project) {
-        // TODO: this should be configurable
-        String siteBuildDir = 'build/site'
+        SiteExtension extension = project.extensions.create('site', SiteExtension) as SiteExtension
 
-        applyWebPreviewConfig project, siteBuildDir
-        applyLicenseConfig project
+        applyWebPreviewConfig project
 
         // TODO: depends on: build, jacocoTestReport (others?)
         project.task SiteTask.NAME, type: SiteTask, group: 'Documentation', description: 'Generates the project web site.'
 
         project.task CheckVersionTask.NAME, type: CheckVersionTask, group: 'Documentation', description: 'Verify that the project version is reflected in the documentation.'
         project.task UpdateVersionTask.NAME, type: UpdateVersionTask, group: 'Documentation', description: 'Updates the version in documentation based on the project version'
-        project.task PublishSiteTask.NAME, type: PublishSiteTask, group: 'Documentation', description: 'Publishes the documentation web site.'
         project.task VerifySiteTask.NAME, type: VerifySiteTask, group: 'Documentation', description: 'Verifies that the documentation site exists at the expected address.'
     }
 
-//    FIXME: test the two applied configurations
+    private static void applyWebPreviewConfig(final Project project) {
+        project.afterEvaluate {
+            project.plugins.withId(WEB_PREVIEW_PLUGIN_ID) {
+                SiteExtension siteExtension = project.extensions.getByType(SiteExtension)
 
-    @TypeChecked(SKIP)
-    private static void applyWebPreviewConfig(final Project project, final String siteBuildDir) {
-        // if the web preview plugin is configured, apply the default config
+                Object webPreviewExt = project.extensions.findByName('webPreview')
+                webPreviewExt.resourceDir = project.file(siteExtension.buildDir)
 
-        project.plugins.withId(WEB_PREVIEW_PLUGIN_ID) {
-            Object webPreviewExt = project.extensions.findByName('webPreview')
-            webPreviewExt.resourceDir = project.file(siteBuildDir)
-        }
-
-        project.logger.info 'Applied default configuration for Web Preview plugin.'
-    }
-
-    @TypeChecked(SKIP)
-    private static void applyLicenseConfig(final Project project){
-        project.plugins.withId(LICENSE_PLUGIN_ID){
-            // TODO: these files should be configurable
-            if( !project.file('license_header.txt').exists() ){
-                project.logger.lifecycle 'No license_header.txt file found, creating one.'
-
-                project.file('license_header.txt').text = ProjectDocsPlugin.getResource('/license_header.template').text
-            }
-
-            if( !project.file('LICENSE').exists() ){
-                project.logger.lifecycle 'No LICENSE file found, creating one.'
-
-                project.file('LICENSE').text = ProjectDocsPlugin.getResource('/LICENSE.template').text
-            }
-
-            // TODO: make this configurable
-            def owner = [name:'Christopher J. Stehno', email:'chris@stehno.com']
-
-            // TODO: apply the license config
-            Object licenseExt = project.extensions.findByName('license')
-            licenseExt.with {
-                header project.file('license_header.txt')
-                ext.name = owner.name
-                ext.email = owner.email
-                ext.year = Calendar.instance.get(Calendar.YEAR)
+                project.logger.info 'Applied default configuration for Web Preview plugin.'
             }
         }
     }

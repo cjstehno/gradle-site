@@ -22,6 +22,9 @@ import spock.lang.Specification
 
 class CheckVersionTaskSpec extends Specification implements UsesGradleBuild {
 
+    // FIXME: test case when there is no readme file
+    // FIXME: test with added files
+    
     @Rule TemporaryFolder projectRoot = new TemporaryFolder()
 
     final String buildTemplate = '''
@@ -61,6 +64,6 @@ class CheckVersionTaskSpec extends Specification implements UsesGradleBuild {
 
         then: 'the build fails'
         def ex = thrown(Exception)
-        ex.message.contains('The documented project version does not match the project version: Run "./gradlew updateVersion -Pfrom=OLD_VERSION" and try again.')
+        ex.message.contains('The documented project version does not match the project version: Run "updateVersion -Pfrom=<old-version>" and try again.')
     }
 }

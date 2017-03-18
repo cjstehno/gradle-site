@@ -4,3 +4,9 @@ Gradle plugin providing helpful tools and configuration used to create and manag
 
 This plugin is primarily a collection of conventions and tasks that I use across most of my projects, therefore it is quite opinionated, but hopefully it will be useful to others as well.
 
+TODO: 
+
+- finish testing
+- API docs
+- User Guide
+- Readme

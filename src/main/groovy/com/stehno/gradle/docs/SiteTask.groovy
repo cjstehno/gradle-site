@@ -30,24 +30,23 @@ class SiteTask extends DefaultTask {
     @TaskAction @SuppressWarnings('GroovyUnusedDeclaration') void site() {
         logger.info 'Building documentation web site...'
 
-        // TODO: these should be configurable
-        String siteSource = 'src/site'
-        String siteBuild = 'build/site'
+        SiteExtension siteExtension = project.extensions.findByType(SiteExtension)
 
-        if (project.file(siteSource).exists()) {
+        if (project.file(siteExtension.srcDir).exists()) {
             // TODO: allow config of additional replacement vars
+
             // copy the templates
             project.copy {
-                from siteSource
-                into siteBuild
+                from siteExtension.srcDir
+                into siteExtension.buildDir
                 include '**/*.html'
                 expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)])
             }
 
             // copy the assets (no variable replacement)
             project.copy {
-                from siteSource
-                into siteBuild
+                from siteExtension.srcDir
+                into siteExtension.buildDir
                 include '**/css/**'
                 include '**/js/**'
                 include '**/img/**'
@@ -57,7 +56,21 @@ class SiteTask extends DefaultTask {
             project.copy {
                 from 'build/reports'
                 include '**/**'
-                into siteBuild
+                into "${siteExtension.buildDir}/reports"
+            }
+
+            // copy the docs
+            project.copy {
+                from 'build/docs'
+                include '**/**'
+                into "${siteExtension.buildDir}/docs"
+            }
+
+            // copy the asciidocs
+            project.copy {
+                from 'build/asciidoc'
+                include '**/**'
+                into "${siteExtension.buildDir}/asciidoc"
             }
         }
     }

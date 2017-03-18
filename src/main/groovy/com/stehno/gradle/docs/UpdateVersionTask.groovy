@@ -26,22 +26,21 @@ class UpdateVersionTask extends DefaultTask {
     static final String NAME = 'updateVersion'
 
     @TaskAction @SuppressWarnings('GroovyUnusedDeclaration') void updateVersion() {
+        SiteExtension extension = project.extensions.findByType(SiteExtension)
+
         String newVersion = project.version
         String oldVersion = project.property('from')
 
-        // TODO: need to be able to configure this
-        List<String> versionedFiles = ['README.md']
+        List<String> versionedFiles = ['README.md'] + extension.versionedFiles
 
         // TODO: should all html be added?
-        if( project.file('src/site/index.html').exists()){
+        if (project.file('src/site/index.html').exists()) {
             versionedFiles << 'src/site/index.html'
         }
 
-        // TODO: also need to update user guide if exists
-
         logger.lifecycle "Updating documentation versions from ${oldVersion} to ${newVersion}..."
 
-        versionedFiles.each { f ->
+        versionedFiles.findAll { p -> project.file(p).exists() }.each { f ->
             ant.replace(file: f, token: oldVersion, value: newVersion)
         }
     }

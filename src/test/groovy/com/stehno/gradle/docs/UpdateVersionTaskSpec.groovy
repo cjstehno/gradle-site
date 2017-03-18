@@ -22,6 +22,8 @@ import spock.lang.Specification
 
 class UpdateVersionTaskSpec extends Specification implements UsesGradleBuild {
 
+    // FIXME: test with added files
+
     @Rule TemporaryFolder projectRoot = new TemporaryFolder()
 
     final String buildTemplate = '''

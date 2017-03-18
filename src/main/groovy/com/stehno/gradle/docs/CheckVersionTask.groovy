@@ -28,16 +28,18 @@ class CheckVersionTask extends DefaultTask {
     @TaskAction @SuppressWarnings('GroovyUnusedDeclaration') void checkVersion() {
         logger.lifecycle "Verifying that the documentation references version ${project.version}..."
 
-        // TODO: should be able to configure this
-        List<String> checkedFiles = ['README.md']
+        SiteExtension extension = project.extensions.findByType(SiteExtension)
+
+        List<String> checkedFiles = ['README.md'] + extension.versionedFiles
 
         // Not the most efficient way to do this but should be ok for now
         boolean documented = checkedFiles.every { f ->
-            boolean ok = project.file(f).text.contains(project.version)
+            File file = project.file(f)
+            boolean ok = !file.exists() || file.text.contains(project.version)
             logger.info " - Checking: $f: $ok"
             ok
         }
 
-        assert documented, 'The documented project version does not match the project version: Run "./gradlew updateVersion -Pfrom=OLD_VERSION" and try again.'
+        assert documented, 'The documented project version does not match the project version: Run "updateVersion -Pfrom=<old-version>" and try again.'
     }
 }
