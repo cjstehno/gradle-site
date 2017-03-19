@@ -1,8 +1,15 @@
 # Gradle Site Plugin
 
+
+[![Build Status](https://travis-ci.org/cjstehno/gradle-site.svg?branch=master)](https://travis-ci.org/cjstehno/gradle-site) [![Coverage Status](https://coveralls.io/repos/github/cjstehno/gradle-site/badge.svg?branch=master)](https://coveralls.io/github/cjstehno/gradle-site?branch=master)
+
 Gradle plugin providing helpful tools and configuration used to create and manage a project website.
 
-TODO: add travis + coveralls
+## Quick Links
+
+* Site: http://stehno.com/gradle-site/
+* API Docs: http://stehno.com/gradle-site/docs/groovydoc/
+* User Guide: http://stehno.com/gradle-site/asciidoc/html5/
 
 ## Install
 

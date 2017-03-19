@@ -6,4 +6,107 @@ v0.0.1, March 2017
 
 == Introduction
 
-Coming soon...
+The Gradle Site Plugin came about as the result of doing a collection of Gradle tasks repeatedly across multiple projects. Each time I would copy and
+paste the collection of task definitions from one project to another, I cringed and told myself that I would sit down and pull them out into a plugin.
+Finally, that day has come. My goal with this plugin is to provide and mostly-generic means of creating a documentation web site for a project. I have
+tried to keep things very light and convention-based so that things just work, especially around the inclusion of API documentation and build reports.
+
+That being said, what this plugin does _not_ provide is a set of site templates; however, I am considering that as a possibility for a later release
+(and there is a simple example later on in the User Guide). I decided that I would rather not directly promote the white-washed project site problem
+where they all start to look alike - this at least encourages some though about the look of the landing page; come on, it's one page of HTML, give it
+a try.
+
+== Configuration
+
+=== Site Extension
+
+TBD:...
+
+properties
+
+methods
+
+[source,groovy]
+----
+site {
+    srcDir = 'src/site'
+    buildDir = 'build/site'
+
+    siteUrl
+
+    /**
+     * Additional paths to be tested against the deployed documentation site.
+     */
+    final List<String> testedPaths = []
+
+    /**
+     * Additional files which may contain documented version information to be managed.
+     */
+    final List<String> versionedFiles = []
+
+    /**
+     * Adds a file that may contain documented version information to be managed.
+     *
+     * @param file the file path string
+     */
+    void versionedFile(final String file) {
+        versionedFiles << file
+    }
+
+    /**
+     * Adds a path to be tested against the deployed documentation site.
+     *
+     * @param path the path to be tested
+     */
+    void testedPath(final String path) {
+        testedPaths << path
+    }
+}
+----
+
+=== Task Dependencies
+
+It is advisable to simplify your site builds by adding your documentation tasks as dependencies of the `site` task. In your `build.gradle` file you
+can add something like the following, with your own documentation and report tasks:
+
+[source,groovy]
+----
+tasks.site.dependsOn = ['build', 'jacocoTestReport', 'groovydoc', 'asciidoctor']
+----
+
+This causes the `site` task to build the project with reports and documentation by simply running the `site` task.
+
+=== Web Preview Plugin
+
+If you have my http://stehno.com/gradle-webpreview-plugin/[Web Preview Plugin] applied to your build, the Site Plugin will configure the preview to
+serve the generated project site by applying the following configuration:
+
+[source,groovy]
+----
+webPreview {
+    resourceDir = site.buildDir
+}
+----
+
+This allows addition of local site previews on an embedded server with only the application of the plugin.
+
+== Site Content
+
+Handling standard reports and documentation in site
+
+Example site templates
+
+
+== Publishing
+
+Suggested publishing config
+
+== Tasks
+
+Details for each task
+
+== Eating My Own Dogfood
+
+An interesting point about this plugin is that it uses itself to generate its own project documentation site. The current production version will
+be applied as a plugin to the build (pulled from the Gradle plugins repo). It makes for a nice quick sanity check when you have to ensure that the
+plugin works before considering it release.
