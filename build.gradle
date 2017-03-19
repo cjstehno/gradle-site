@@ -6,14 +6,13 @@ plugins {
     id 'groovy'
     id 'jacoco'
     id 'maven-publish'
-    id "com.stehno.gradle.webpreview" version "0.2.0"
+    id 'com.stehno.gradle.webpreview' version '0.2.0'
+    id 'org.asciidoctor.convert' version '1.5.3'
+    id 'com.stehno.gradle.site' version '0.0.1' // this should be the deployed version
 }
 
-// FIXME: once I have a working version, use it for this project
-// FIXME: this should probably be renamed to the site-plugin (and remove my other site-plugin project)
-
-version = "0.0.1"
-group = "com.stehno.gradle"
+version = '0.0.1'
+group = 'com.stehno.gradle'
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -45,11 +44,22 @@ dependencies {
     testCompile('com.stehno.ersatz:ersatz:1.1.0') {
         exclude module: 'groovy-all'
     }
-
 }
 
 groovydoc {
     groovyClasspath = configurations.groovyDoc
+}
+
+asciidoctor {
+    options doctype: 'book'
+
+    backends = ['html5']
+
+    attributes 'source-highlighter': 'coderay',
+        'coderay-linenums-mode': 'table',
+        icon: 'font',
+        linkattrs: true,
+        encoding: 'utf-8'
 }
 
 license {
@@ -84,3 +94,5 @@ task publishSite(type: GradleBuild, group: 'Publishing', description: 'Publishes
     buildFile = 'publish.gradle'
     tasks = ['publishGhPages']
 }
+
+tasks.site.dependsOn = ['build', 'jacocoTestReport', 'groovydoc', 'asciidoctor']
