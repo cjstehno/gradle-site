@@ -18,13 +18,16 @@ package com.stehno.gradle.docs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Gradle plugin used to add documentation site creation and management tasks.
+ */
 class ProjectDocsPlugin implements Plugin<Project> {
 
     private static final String WEB_PREVIEW_PLUGIN_ID = 'com.stehno.gradle.webpreview'
 
     @Override
     void apply(final Project project) {
-        SiteExtension extension = project.extensions.create('site', SiteExtension) as SiteExtension
+        project.extensions.create('site', SiteExtension) as SiteExtension
 
         applyWebPreviewConfig project
 

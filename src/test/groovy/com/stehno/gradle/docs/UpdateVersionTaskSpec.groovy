@@ -22,8 +22,6 @@ import spock.lang.Specification
 
 class UpdateVersionTaskSpec extends Specification implements UsesGradleBuild {
 
-    // FIXME: test with added files
-
     @Rule TemporaryFolder projectRoot = new TemporaryFolder()
 
     final String buildTemplate = '''
@@ -53,6 +51,29 @@ class UpdateVersionTaskSpec extends Specification implements UsesGradleBuild {
 
         and: 'the version is updated'
         fileExists('README.md', 'This is for version 1.2.3')
+    }
+
+    def 'updateVersion with extra files (updates)'() {
+        setup:
+        buildFile(extension: '''
+            site {
+                versionedFile 'foo.txt'
+            }
+        ''')
+
+        def tree = fileTree()
+        tree.file('README.md', 'This is for version 1.0.3')
+        tree.file('foo.txt', 'This is another version 1.0.3')
+
+        when: 'the updateVersion task is run'
+        BuildResult result = gradleRunner('updateVersion -Pfrom=1.0.3').build()
+
+        then: 'the build is successful'
+        totalSuccess result
+
+        and: 'the version is updated'
+        fileExists('README.md', 'This is for version 1.2.3')
+        fileExists('foo.txt', 'This is another version 1.2.3')
     }
 
     def 'updateVersion with site (updates)'() {

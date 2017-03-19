@@ -20,18 +20,21 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
- * FIXME: document
+ * The 'verifySite' task is used to verify that a running web server contains the desired pages. This verification only ensures that the specified
+ * pages exist on the site, not that the content matches.
+ *
+ * The base URL is determined by the site.siteUrl configuration, though a "-PsiteUrl" parameter may be specified to override it.
+ *
+ * By default, the index.html page is tested; however, additional tested paths may be provided in the configuration.
  */
 class VerifySiteTask extends DefaultTask {
 
     static final String NAME = 'verifySite'
 
     @TaskAction @SuppressWarnings('GroovyUnusedDeclaration') void verifySite() {
-        // TODO: default should be configurable for the project main site
-        def siteUrl = project.hasProperty('siteUrl') ? project.property('siteUrl') : 'http://localhost:8080'
+        SiteExtension siteExtension = project.extensions.findByType(SiteExtension)
 
-        // TODO: this needs to be configurable
-        List<String> testedPaths = ['/index.html']
+        def siteUrl = project.hasProperty('siteUrl') ? project.property('siteUrl') : siteExtension.siteUrl
 
         logger.lifecycle "Verifying that site exists at ${siteUrl}..."
 
@@ -40,7 +43,7 @@ class VerifySiteTask extends DefaultTask {
         }
 
         // we'll just hit the important ones
-        boolean exists = testedPaths.every { page ->
+        boolean exists = (['/index.html'] + siteExtension.testedPaths).every { page ->
             boolean ok = http.head(Boolean) {
                 request.uri.path = page
                 response.success { fs, obj -> true }

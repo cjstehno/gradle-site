@@ -6,7 +6,7 @@ This plugin is primarily a collection of conventions and tasks that I use across
 
 TODO: 
 
-- finish testing
 - API docs
 - User Guide
 - Readme
+- codenar, coverage, coveralls, travis, etc

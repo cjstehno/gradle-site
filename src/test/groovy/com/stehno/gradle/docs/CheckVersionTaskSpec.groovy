@@ -22,9 +22,6 @@ import spock.lang.Specification
 
 class CheckVersionTaskSpec extends Specification implements UsesGradleBuild {
 
-    // FIXME: test case when there is no readme file
-    // FIXME: test with added files
-    
     @Rule TemporaryFolder projectRoot = new TemporaryFolder()
 
     final String buildTemplate = '''
@@ -40,7 +37,7 @@ class CheckVersionTaskSpec extends Specification implements UsesGradleBuild {
         ${config.extension ?: ''}
     '''
 
-    def 'checkVersion (ok)'(){
+    def 'checkVersion (ok)'() {
         setup:
         buildFile(extension: '')
 
@@ -53,7 +50,37 @@ class CheckVersionTaskSpec extends Specification implements UsesGradleBuild {
         totalSuccess result
     }
 
-    def 'checkVersion (fail)'(){
+    def 'checkVersion with out files (ok)'() {
+        setup:
+        buildFile(extension: '')
+
+        when: 'the checkVersion task is run'
+        BuildResult result = gradleRunner('checkVersion').build()
+
+        then: 'the build is successful'
+        totalSuccess result
+    }
+
+    def 'checkVersion with added config (ok)'() {
+        setup:
+        buildFile(extension: '''
+            site {
+                versionedFile 'foo.txt'
+            }
+        ''')
+
+        def tree = fileTree()
+        tree.file('README.md', 'This is for version 1.2.3')
+        tree.file('foo.txt', 'Another versioned for 1.2.3')
+
+        when: 'the checkVersion task is run'
+        BuildResult result = gradleRunner('checkVersion').build()
+
+        then: 'the build is successful'
+        totalSuccess result
+    }
+
+    def 'checkVersion (fail)'() {
         setup:
         buildFile(extension: '')
 

@@ -19,7 +19,8 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
- * FIXME: document
+ * The "checkVersion" used to check if the expected files contain the correct version information (which is configured in the build.gradle file
+ * version property). This check is done fairly loosely as a simple check of whether or not the expected version string appears in the file content.
  */
 class CheckVersionTask extends DefaultTask {
 
@@ -30,10 +31,8 @@ class CheckVersionTask extends DefaultTask {
 
         SiteExtension extension = project.extensions.findByType(SiteExtension)
 
-        List<String> checkedFiles = ['README.md'] + extension.versionedFiles
-
         // Not the most efficient way to do this but should be ok for now
-        boolean documented = checkedFiles.every { f ->
+        boolean documented = (['README.md'] + extension.versionedFiles).every { f ->
             File file = project.file(f)
             boolean ok = !file.exists() || file.text.contains(project.version)
             logger.info " - Checking: $f: $ok"

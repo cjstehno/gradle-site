@@ -58,6 +58,27 @@ class VerifySiteTaskSpec extends Specification implements UsesGradleBuild {
         totalSuccess result
     }
 
+    def 'verifySite configured (succeeds)'() {
+        setup:
+        ersatzServer.expectations {
+            head('/index.html').responds().code(200)
+            head('/foo.html').responds().code(200)
+        }
+
+        buildFile(extension: """
+            site {
+                siteUrl = '${ersatzServer.httpUrl}' 
+                testedPath '/foo.html'
+            }
+        """)
+
+        when: 'the verifySite task is run'
+        BuildResult result = gradleRunner("verifySite").build()
+
+        then: 'the build is successful'
+        totalSuccess result
+    }
+
     def 'verifySite (fails)'() {
         setup:
         buildFile(extension: '')

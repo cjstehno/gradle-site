@@ -19,7 +19,9 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
- * FIXME: document
+ * The "updateVersion" task is used to update the project version string in configured "versioned files", the README.md by default. The "from" build
+ * property is used to specify the old version, while the version configured in the build.gradle file is used as the new version. The old version
+ * string will be replaced with the new version string in the configured files.
  */
 class UpdateVersionTask extends DefaultTask {
 
@@ -33,7 +35,6 @@ class UpdateVersionTask extends DefaultTask {
 
         List<String> versionedFiles = ['README.md'] + extension.versionedFiles
 
-        // TODO: should all html be added?
         if (project.file('src/site/index.html').exists()) {
             versionedFiles << 'src/site/index.html'
         }
