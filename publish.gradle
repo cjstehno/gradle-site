@@ -1,5 +1,5 @@
 plugins {
-    id "org.ajoberstar.github-pages" version "1.6.0"
+    id "org.ajoberstar.github-pages" version "1.5.1"
 }
 
 githubPages {
