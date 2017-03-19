@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SitePlugin.groovy</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">site</a> &gt; <a href="index.source.html" class="el_package">com.stehno.gradle.site</a> &gt; <span class="el_source">SitePlugin.groovy</span></div><h1>SitePlugin.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Christopher J. Stehno &lt;chris@stehno.com&gt;
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.stehno.gradle.site
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+/**
+ * Gradle plugin used to add documentation site creation and management tasks.
+ */
+class SitePlugin implements Plugin&lt;Project&gt; {
+
+    private static final String WEB_PREVIEW_PLUGIN_ID = 'com.stehno.gradle.webpreview'
+
+    @Override
+    void apply(final Project project) {
+<span class="fc" id="L30">        project.extensions.create('site', SiteExtension) as SiteExtension</span>
+
+<span class="fc" id="L32">        applyWebPreviewConfig project</span>
+
+        // TODO: depends on: build, jacocoTestReport (others?)
+<span class="fc" id="L35">        project.task SiteTask.NAME, type: SiteTask, group: 'Documentation', description: 'Generates the project web site.'</span>
+
+<span class="fc" id="L37">        project.task CheckVersionTask.NAME, type: CheckVersionTask, group: 'Documentation', description: 'Verify that the project version is reflected in the documentation.'</span>
+<span class="fc" id="L38">        project.task UpdateVersionTask.NAME, type: UpdateVersionTask, group: 'Documentation', description: 'Updates the version in documentation based on the project version'</span>
+<span class="fc" id="L39">        project.task VerifySiteTask.NAME, type: VerifySiteTask, group: 'Documentation', description: 'Verifies that the documentation site exists at the expected address.'</span>
+    }
+
+    private static void applyWebPreviewConfig(final Project project) {
+<span class="fc" id="L43">        project.afterEvaluate {</span>
+<span class="pc" id="L44">            project.plugins.withId(WEB_PREVIEW_PLUGIN_ID) {</span>
+<span class="nc" id="L45">                SiteExtension siteExtension = project.extensions.getByType(SiteExtension)</span>
+
+<span class="nc" id="L47">                Object webPreviewExt = project.extensions.findByName('webPreview')</span>
+<span class="nc" id="L48">                webPreviewExt.resourceDir = project.file(siteExtension.buildDir)</span>
+
+<span class="nc" id="L50">                project.logger.info 'Applied default configuration for Web Preview plugin.'</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
