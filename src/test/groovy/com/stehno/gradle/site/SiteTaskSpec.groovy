@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stehno.gradle.docs
+package com.stehno.gradle.site
 
 import org.gradle.testkit.runner.BuildResult
 import org.junit.Rule
@@ -28,7 +28,7 @@ class SiteTaskSpec extends Specification implements UsesGradleBuild {
 
     final String buildTemplate = '''
         plugins {
-            id 'com.stehno.gradle.project-docs'
+            id 'com.stehno.gradle.site'
         }
         
         version = '1.2.3'

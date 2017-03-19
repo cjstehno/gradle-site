@@ -60,15 +60,15 @@ license {
 }
 
 pluginBundle {
-    website = 'http://cjstehno.github.io/gradle-project-docs/'
-    vcsUrl = 'https://github.com/cjstehno/gradle-project-docs'
-    description = 'Gradle plugin to help create and manage project documentation.'
+    website = 'http://cjstehno.github.io/gradle-site/'
+    vcsUrl = 'https://github.com/cjstehno/gradle-site'
+    description = 'Gradle plugin to help create and manage a project documentation site.'
     tags = ['gradle', 'groovy']
 
     plugins {
         webpreviewPlugin {
-            id = 'com.stehno.gradle.project-docs'
-            displayName = 'Gradle Project Docs Plugin'
+            id = 'com.stehno.gradle.site'
+            displayName = 'Gradle Site Plugin'
         }
     }
 }
@@ -80,67 +80,7 @@ jacocoTestReport {
     }
 }
 
-task site(group: 'Documentation', description: 'Builds the documentation web site.', dependsOn: ['build', 'jacocoTestReport']) {
-    doLast {
-        logger.info 'Building documentation web site...'
-
-        // copy the templates
-        copy {
-            from 'src/site'
-            into 'build/site'
-            include '**/*.html'
-            expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)])
-        }
-
-        // copy the assets
-        copy {
-            from 'src/site'
-            into 'build/site'
-            include '**/stylesheets/**'
-            include '**/javascripts/**'
-            include '**/images/**'
-        }
-
-        copy {
-            from 'build/reports'
-            include '**/**'
-            into 'build/site'
-        }
-    }
-}
-
 task publishSite(type: GradleBuild, group: 'Publishing', description: 'Publishes the documentation web site.', dependsOn: ['site']) {
     buildFile = 'publish.gradle'
     tasks = ['publishGhPages']
-}
-
-task updateVersion(group: 'Documentation', description: 'Updates the version in documentation based on the project version') {
-    doLast {
-        String newVersion = project.version
-        String oldVersion = project.property('from')
-
-        logger.lifecycle "Updating documentation versions from ${oldVersion} to ${newVersion}..."
-
-        ant.replace(file: 'README.md', token: oldVersion, value: newVersion)
-    }
-}
-
-task checkVersion(group: 'Verification', description: 'Verify that the project version is reflected in the documentation.') {
-    doLast {
-        logger.lifecycle "Verifying that the documentation references version ${project.version}..."
-
-        // Not the most efficient way to do this but should be ok for now
-        boolean documented = ['README.md'].every { f ->
-            boolean ok = project.file(f).text.contains(project.version)
-
-            logger.info " - Checking: $f: $ok"
-            ok
-        }
-
-        assert documented, 'The documented project version does not match the project version: Run "./gradlew updateVersion -Pfrom=OLD_VERSION" and try again.'
-    }
-}
-
-webPreview {
-    resourceDir = file('build/site')
 }

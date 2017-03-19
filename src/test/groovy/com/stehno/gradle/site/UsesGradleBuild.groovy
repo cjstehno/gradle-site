@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stehno.gradle.docs
+package com.stehno.gradle.site
 
 import groovy.text.GStringTemplateEngine
 import groovy.text.TemplateEngine

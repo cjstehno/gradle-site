@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stehno.gradle.docs
+package com.stehno.gradle.site
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -21,7 +21,7 @@ import org.gradle.api.Project
 /**
  * Gradle plugin used to add documentation site creation and management tasks.
  */
-class ProjectDocsPlugin implements Plugin<Project> {
+class SitePlugin implements Plugin<Project> {
 
     private static final String WEB_PREVIEW_PLUGIN_ID = 'com.stehno.gradle.webpreview'
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 githubPages {
-    repoUri = 'git@github.com:cjstehno/gradle-project-docs'
+    repoUri = 'git@github.com:cjstehno/gradle-site'
     pages {
         from(file('build/site')) {
             into '.'
