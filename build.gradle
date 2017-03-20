@@ -95,4 +95,8 @@ task publishSite(type: GradleBuild, group: 'Publishing', description: 'Publishes
     tasks = ['publishGhPages']
 }
 
+site {
+    versionedFile 'src/docs/asciidoc/index.adoc'
+}
+
 tasks.site.dependsOn = ['build', 'jacocoTestReport', 'groovydoc', 'asciidoctor']
