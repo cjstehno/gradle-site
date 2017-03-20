@@ -23,7 +23,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.stehno.gradle:site:0.0.1"
+    classpath "gradle.plugin.com.stehno.gradle:site:0.0.2"
   }
 }
 
@@ -34,29 +34,10 @@ Build script snippet for new, incubating, plugin mechanism introduced in Gradle 
 
 ```groovy
 plugins {
-  id "com.stehno.gradle.site" version "0.0.1"
+  id "com.stehno.gradle.site" version "0.0.2"
 }
 ```
 
-## Configuration
+## Usage
 
-> TBD...
-
-You may want to simplify your `site` task to run any reports or other pre-requisites by adding dependencies in your `build.gradle` file, such as:
-
-```groovy
-tasks.site.dependsOn = ['build', 'jacocoTestReport', 'groovydoc']
-```
-
-added preview config
-
-## Tasks
-
-> TBD...
-
-site
-verifySite
-checkVersion
-updateVersion
-
-This should go in a user guide
+See the http://stehno.com/gradle-site/asciidoc/html5/[User Guide] for configuration and usage information.

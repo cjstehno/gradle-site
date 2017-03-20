@@ -33,14 +33,12 @@ class SiteTask extends DefaultTask {
         SiteExtension siteExtension = project.extensions.findByType(SiteExtension)
 
         if (project.file(siteExtension.srcDir).exists()) {
-            // TODO: allow config of additional replacement vars
-
             // copy the templates
             project.copy {
                 from siteExtension.srcDir
                 into siteExtension.buildDir
                 include '**/*.html'
-                expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)])
+                expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)] + siteExtension.variables)
             }
 
             // copy the assets (no variable replacement)

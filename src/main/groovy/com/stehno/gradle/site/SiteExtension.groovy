@@ -38,12 +38,17 @@ class SiteExtension {
     /**
      * Additional paths to be tested against the deployed documentation site.
      */
-    final List<String> testedPaths = []
+    List<String> testedPaths = []
 
     /**
      * Additional files which may contain documented version information to be managed.
      */
-    final List<String> versionedFiles = []
+    List<String> versionedFiles = []
+
+    /**
+     * Additional site template variable replacements.
+     */
+    Map<String, Object> variables = [:]
 
     /**
      * Adds a file that may contain documented version information to be managed.
@@ -61,5 +66,24 @@ class SiteExtension {
      */
     void testedPath(final String path) {
         testedPaths << path
+    }
+
+    /**
+     * Adds the specified variable replacement to the site template generation.
+     *
+     * @param name the variable name
+     * @param value the variable value
+     */
+    void variable(final String name, final Object value) {
+        variables[name] = value
+    }
+
+    /**
+     * Adds the specified variable replacements to the site template generation.
+     *
+     * @param vars the map of variable replacements
+     */
+    void variables(final Map<String, Object> vars) {
+        variables.putAll(vars)
     }
 }
