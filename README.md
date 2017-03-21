@@ -8,6 +8,7 @@ Gradle plugin providing helpful tools and configuration used to create and manag
 ## Quick Links
 
 * Site: http://stehno.com/gradle-site/
+* Project: https://github.com/cjstehno/gradle-site
 * API Docs: http://stehno.com/gradle-site/docs/groovydoc/
 * User Guide: http://stehno.com/gradle-site/asciidoc/html5/
 

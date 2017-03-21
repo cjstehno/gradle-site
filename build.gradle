@@ -8,7 +8,7 @@ plugins {
     id 'maven-publish'
     id 'com.stehno.gradle.webpreview' version '0.2.0'
     id 'org.asciidoctor.convert' version '1.5.3'
-    id 'com.stehno.gradle.site' version '0.0.1' // this should be the deployed version
+    id 'com.stehno.gradle.site' version '0.0.2' // this should be the deployed version
 }
 
 version = '0.0.2'
@@ -97,6 +97,7 @@ task publishSite(type: GradleBuild, group: 'Publishing', description: 'Publishes
 
 site {
     versionedFile 'src/docs/asciidoc/index.adoc'
+    assetDir '**/fonts/**'
 }
 
 tasks.site.dependsOn = ['build', 'jacocoTestReport', 'groovydoc', 'asciidoctor']

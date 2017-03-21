@@ -51,6 +51,11 @@ class SiteExtension {
     Map<String, Object> variables = [:]
 
     /**
+     * Additional site asset directories to be copied into the site build directory (un-processed).
+     */
+    List<String> assetDirs = []
+
+    /**
      * Adds a file that may contain documented version information to be managed.
      *
      * @param file the file path string
@@ -85,5 +90,14 @@ class SiteExtension {
      */
     void variables(final Map<String, Object> vars) {
         variables.putAll(vars)
+    }
+
+    /**
+     * Used to specify an additional asset directory to be copied (un-processed) into the site build directory.
+     *
+     * @param dir the added directory (under the site source dir) - ant patterns are allowed
+     */
+    void assetDir(final String dir){
+        assetDirs << dir
     }
 }

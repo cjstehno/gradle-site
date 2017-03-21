@@ -48,6 +48,9 @@ class SiteTask extends DefaultTask {
                 include '**/css/**'
                 include '**/js/**'
                 include '**/img/**'
+                siteExtension.assetDirs.each { dir->
+                    include dir
+                }
             }
 
             // copy the build reports

@@ -94,6 +94,19 @@ Also, note that since these files are treated as
 http://docs.groovy-lang.org/next/html/documentation/template-engines.html#_gstringtemplateengine[Groovy templates] you will have other Groovy
 functionality available for use.
 
+The directories `css`, `js`, `img` will also have their content copied into the site build directory under the appropriate directories. Other directories
+may be added using the `List<String> assetDirs` property or the `assetDir(String)` method - these specified site source sub-directories (with optional
+ ant pattern) will be copied over to the build directory un-processed. For example:
+
+[source,groovy]
+----
+site {
+    assetDir '**/fonts/**'
+}
+----
+
+This would copy over the fonts sub-directory and its contents to the same sub-directory under the site build directory.
+
 === `checkVersion`
 
 The `checkVersion` task is used to verify that all of the "versioned" files have the correct version as expressed by the `build.gradle` file. By
