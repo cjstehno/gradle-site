@@ -1,14 +1,105 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Gradle Site Plugin</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 
-    <h1>Gradle Site Plugin</h1>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Gradle Site Plugin</a>
+        </div>
 
-    <a href="reports/jacoco/test/html">Test Report</a> ~
-    <a href="reports/tests/test">Coverage Report</a> ~
-    <a href="docs/groovydoc">API Docs</a> ~
-    <a href="asciidoc/html5/">User Guide</a>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="https://github.com/cjstehno/gradle-site">Project</a></li>
+                <li><a href="https://github.com/cjstehno/gradle-site/issues">Issues</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Documentation <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="asciidoc/html5/">User Guide</a></li>
+                        <li><a href="docs/groovydoc">API Docs</a></li>
+                        <li><a href="reports/tests/test">Test Report</a></li>
+                        <li><a href="reports/jacoco/test/html">Coverage Report</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" style="margin-top: -40px;">
+    <div class="row">
+        <div class="col-md-12">
+            <p>Gradle plugin providing helpful tools and configuration used to create and manage a project website.</p>
+
+            <h2>Features</h2>
+
+            <ul>
+                <li>Aggregates standard generated documentation and build reports for easy site inclusion.</li>
+                <li>Provides tasks to manage the documented project version in the site and project README.</li>
+                <li>Allows for verification of published content.</li>
+                <li>Configures the `build/site` directory as the resource directory when the Web Preview Plugin is applied.</li>
+            </ul>
+
+            <h2>Installation</h2>
+
+            <p>Build script snippet for use in all Gradle versions:</p>
+
+            <pre><code>buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.stehno.gradle:site:0.0.2"
+    }
+}
+
+apply plugin: "com.stehno.gradle.site"</code></pre>
+
+            <p>Build script snippet for new, incubating, plugin mechanism introduced in Gradle 2.1:</p>
+
+            <pre><code>plugins {
+    id "com.stehno.gradle.site" version "0.0.2"
+}</code></pre>
+
+            <h2>Usage</h2>
+
+            <p>See the <a href="asciidoc/html5/">User Guide</a> for configuration and usage information.</p>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

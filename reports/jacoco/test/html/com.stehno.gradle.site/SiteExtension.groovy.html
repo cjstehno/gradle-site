@@ -38,12 +38,22 @@ class SiteExtension {
     /**
      * Additional paths to be tested against the deployed documentation site.
      */
-<span class="fc" id="L41">    final List&lt;String&gt; testedPaths = []</span>
+<span class="fc" id="L41">    List&lt;String&gt; testedPaths = []</span>
 
     /**
      * Additional files which may contain documented version information to be managed.
      */
-<span class="fc" id="L46">    final List&lt;String&gt; versionedFiles = []</span>
+<span class="fc" id="L46">    List&lt;String&gt; versionedFiles = []</span>
+
+    /**
+     * Additional site template variable replacements.
+     */
+    Map&lt;String, Object&gt; variables = [:]
+
+    /**
+     * Additional site asset directories to be copied into the site build directory (un-processed).
+     */
+<span class="fc" id="L56">    List&lt;String&gt; assetDirs = []</span>
 
     /**
      * Adds a file that may contain documented version information to be managed.
@@ -51,7 +61,7 @@ class SiteExtension {
      * @param file the file path string
      */
     void versionedFile(final String file) {
-<span class="fc" id="L54">        versionedFiles &lt;&lt; file</span>
+<span class="fc" id="L64">        versionedFiles &lt;&lt; file</span>
     }
 
     /**
@@ -60,7 +70,35 @@ class SiteExtension {
      * @param path the path to be tested
      */
     void testedPath(final String path) {
-<span class="fc" id="L63">        testedPaths &lt;&lt; path</span>
+<span class="fc" id="L73">        testedPaths &lt;&lt; path</span>
+    }
+
+    /**
+     * Adds the specified variable replacement to the site template generation.
+     *
+     * @param name the variable name
+     * @param value the variable value
+     */
+    void variable(final String name, final Object value) {
+<span class="nc" id="L83">        variables[name] = value</span>
+    }
+
+    /**
+     * Adds the specified variable replacements to the site template generation.
+     *
+     * @param vars the map of variable replacements
+     */
+    void variables(final Map&lt;String, Object&gt; vars) {
+<span class="nc" id="L92">        variables.putAll(vars)</span>
+    }
+
+    /**
+     * Used to specify an additional asset directory to be copied (un-processed) into the site build directory.
+     *
+     * @param dir the added directory (under the site source dir) - ant patterns are allowed
+     */
+    void assetDir(final String dir){
+<span class="nc" id="L101">        assetDirs &lt;&lt; dir</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

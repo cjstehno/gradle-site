@@ -515,13 +515,35 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Christopher J. Stehno</span><br>
 <span id="email" class="email"><a href="mailto:chris@stehno.com">chris@stehno.com</a></span><br>
-<span id="revnumber">version 0.0.1,</span>
+<span id="revnumber">version 0.0.2,</span>
 <span id="revdate">March 2017</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">Introduction</a></li>
+<li><a href="#_configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_site_extension">Site Extension</a>
+<ul class="sectlevel3">
+<li><a href="#_properties">Properties</a></li>
+<li><a href="#_methods">Methods</a></li>
+</ul>
+</li>
+<li><a href="#_web_preview_plugin">Web Preview Plugin</a></li>
+<li><a href="#_task_dependencies">Task Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#_tasks">Tasks</a>
+<ul class="sectlevel2">
+<li><a href="#__code_site_code"><code>site</code></a></li>
+<li><a href="#__code_checkversion_code"><code>checkVersion</code></a></li>
+<li><a href="#__code_updateversion_code"><code>updateVersion</code></a></li>
+<li><a href="#__code_verifysite_code"><code>verifySite</code></a></li>
+</ul>
+</li>
+<li><a href="#_publishing">Publishing</a></li>
+<li><a href="#_eating_my_own_dog_food">Eating My Own Dog Food</a></li>
 </ul>
 </div>
 </div>
@@ -530,15 +552,290 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Coming soon&#8230;&#8203;</p>
+<p>The Gradle Site Plugin came about as the result of doing a collection of Gradle tasks repeatedly across multiple projects. Each time I would copy and
+paste the collection of task definitions from one project to another, I cringed and told myself that I would sit down and pull them out into a plugin.
+Finally, that day has come. My goal with this plugin is to provide and mostly-generic means of creating a documentation web site for a project. I have
+tried to keep things very light and convention-based so that things just work, especially around the inclusion of API documentation and build reports.</p>
+</div>
+<div class="paragraph">
+<p>That being said, what this plugin does <em>not</em> provide is a set of site templates; however, I am considering that as a possibility for a later release.
+I decided that I would rather not directly promote the white-washed project site problem where they all start to look alike - this at least encourages
+some though about the look of the landing page; come on, it&#8217;s one page of HTML, give it a try.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most of the configuration for the Site Plugin is done with the <code>site</code> DSL extension; however, there is some additional functionality added when
+certain other plugins are applied.</p>
+</div>
+<div class="sect2">
+<h3 id="_site_extension">Site Extension</h3>
+<div class="paragraph">
+<p>Ths <code>site</code> DSL extension is the primary means of configuring the Site Plugin; it&#8217;s properties and methods are described below.</p>
+</div>
+<div class="sect3">
+<h4 id="_properties">Properties</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>String srcDir</code> - configures the source directory for the project site content (defaults to <code>src/site</code>).</p>
+</li>
+<li>
+<p><code>String buildDir</code> - configures the build directory for the generated and aggregated project site content (defaults to <code>build/site</code>).</p>
+</li>
+<li>
+<p><code>String siteUrl</code> - an optional configuration used to specify the production project site URL, used by <code>verifySite</code> as the default site URL.</p>
+</li>
+<li>
+<p><code>List&lt;String&gt; testedPaths</code> - configures the additional paths to be checked during the <code>verifySite</code> execution</p>
+</li>
+<li>
+<p><code>List&lt;String&gt; versionedFiles</code> - configures the additional files noted as having version information to be updated during <code>updateVersion</code> execution.</p>
+</li>
+<li>
+<p>'Map&lt;String,Object&gt; variables` - configures the additional site content replacement variables.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_methods">Methods</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>testedPath(String)</code> - adds a path to those checked during the <code>verifySite</code> execution.</p>
+</li>
+<li>
+<p><code>versionedFile(String)</code> - adds a file noted as containing version information which should be updated during an <code>updateVersion</code> execution.</p>
+</li>
+<li>
+<p><code>variable(String, Object)</code> - add the specified site content replacement variable.</p>
+</li>
+<li>
+<p><code>variables(Map&lt;String,Object&gt;)</code> - adds all of the provided site content replacement variables.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_web_preview_plugin">Web Preview Plugin</h3>
+<div class="paragraph">
+<p>If you have my <a href="http://stehno.com/gradle-webpreview-plugin/">Web Preview Plugin</a> applied to your build, the Site Plugin will configure the preview to
+serve the generated project site by applying the following configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">webPreview {
+    resourceDir = site.buildDir
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This allows addition of local site previews on an embedded server with only the application of the plugin:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>./gradlew startPreview</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More usage details can be found on the <a href="http://stehno.com/gradle-webpreview-plugin/">Web Preview Plugin</a> web site.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_task_dependencies">Task Dependencies</h3>
+<div class="paragraph">
+<p>It is advisable to simplify your site builds by adding your documentation tasks as dependencies of the <code>site</code> task. In your <code>build.gradle</code> file you
+can add something like the following, with your own documentation and report tasks:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">tasks.site.dependsOn = [<span class="string"><span class="delimiter">'</span><span class="content">build</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">jacocoTestReport</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">groovydoc</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">asciidoctor</span><span class="delimiter">'</span></span>]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This causes the <code>site</code> task to build the project with reports and documentation by simply running:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>./gradlew site</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which keeps you from having to remember all of the dependency tasks.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tasks">Tasks</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__code_site_code"><code>site</code></h3>
+<div class="paragraph">
+<p>The <code>site</code> task is used to build the project site. The generated project web site is an aggregation of any content in your site <code>srcDir</code>, the content
+from any generated reports (<code>build/reports</code>), the content from any generated API documentation (<code>build/docs</code>), and the content from an AsciiDoc user
+guide ('build/asciidoc`), if there is one. The contents of these directories are copied into the site <code>buildDir</code> location.</p>
+</div>
+<div class="paragraph">
+<p>Any HTML files in the site <code>srcDir</code> will be processed with some replacement variables (as Groovy templates). The provided variable replacements are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>project_version</code> - the string representation of the current version for the project (from the <code>build.gradle</code> file configuration).</p>
+</li>
+<li>
+<p><code>year</code> - the current year.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Other replacement variables may be configured in the <code>site</code> DSL extension with the <code>variables</code> property, or the <code>variable(String)</code> or
+<code>variables(Map&lt;String,Object&gt;)</code> methods.</p>
+</div>
+<div class="paragraph">
+<p>Also, note that since these files are treated as
+<a href="http://docs.groovy-lang.org/next/html/documentation/template-engines.html#_gstringtemplateengine">Groovy templates</a> you will have other Groovy
+functionality available for use.</p>
+</div>
+<div class="paragraph">
+<p>The directories <code>css</code>, <code>js</code>, <code>img</code> will also have their content copied into the site build directory under the appropriate directories. Other directories
+may be added using the <code>List&lt;String&gt; assetDirs</code> property or the <code>assetDir(String)</code> method - these specified site source sub-directories (with optional
+ ant pattern) will be copied over to the build directory un-processed. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">site {
+    assetDir <span class="string"><span class="delimiter">'</span><span class="content">**/fonts/**</span><span class="delimiter">'</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This would copy over the fonts sub-directory and its contents to the same sub-directory under the site build directory.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__code_checkversion_code"><code>checkVersion</code></h3>
+<div class="paragraph">
+<p>The <code>checkVersion</code> task is used to verify that all of the "versioned" files have the correct version as expressed by the <code>build.gradle</code> file. By
+default, only the <code>README.md</code> file is checked (if one exists); however, additional files may be specified in the <code>site</code> DSL extension using the
+<code>List&lt;String&gt; versionedFiles</code> property or the <code>versionedFile(String)</code> method.</p>
+</div>
+<div class="paragraph">
+<p>The check is done with a simple verification that the version string exists within the file content - it&#8217;s not foolproof but better than nothing.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__code_updateversion_code"><code>updateVersion</code></h3>
+<div class="paragraph">
+<p>The <code>updateVersion</code> task is used with a CLI input parameter <code>-Pfrom=VERSION</code> where <code>VERSION</code> is the old version of the project (before the <code>build.gradle</code>
+version was updated). Running this task will do a string replacement of the old version string with the current version string in all of the
+configured "versioned" files. By default, only the <code>README.md</code> file is versioned (if one exists); however, additional files may be specified in the
+<code>site</code> DSL extension using the <code>List&lt;String&gt; versionedFiles</code> property or the <code>versionedFile(String)</code> method.</p>
+</div>
+<div class="paragraph">
+<p>The check is done with a simple verification that the version string exists within the file content - it&#8217;s not foolproof but better than nothing.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__code_verifysite_code"><code>verifySite</code></h3>
+<div class="paragraph">
+<p>The <code>verifySite</code> task is used to verify the published site contents. By default, the <code>siteUrl</code> configured in the <code>site</code> DSL extension is used as the
+published site URL; however, this may be overridden on the command line using <code>-PsiteUrl=SITE_URL</code>.</p>
+</div>
+<div class="paragraph">
+<p>By default, only the <code>index.html</code> page is verified. Other pages may be added using the <code>List&lt;String&gt; testedPaths</code> property or the <code>testedPath(String)</code>
+method of the <code>site</code> DSL extension.</p>
+</div>
+<div class="paragraph">
+<p>This task only checks for the existence of the specified pages, not their content.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_publishing">Publishing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Site plugin provides no direct means of publishing the project site, nor does it require any specific publication environment; however, if you are
+using GitHub to host your project repository, you can use the GitHub-Pages functionality to host the project web site.</p>
+</div>
+<div class="paragraph">
+<p>Create an empty <code>gh-pages</code> branch in your repo, then in your development branch create a <code>publish.gradle</code> file in the root of your project with the
+following content:</p>
+</div>
+<div class="listingblock">
+<div class="title">publish.gradle</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">plugins {
+    id <span class="string"><span class="delimiter">&quot;</span><span class="content">org.ajoberstar.github-pages</span><span class="delimiter">&quot;</span></span> version <span class="string"><span class="delimiter">&quot;</span><span class="content">1.5.1</span><span class="delimiter">&quot;</span></span>
+}
+
+githubPages {
+    repoUri = GIT_CLONE_URI
+    pages {
+        from(file(<span class="string"><span class="delimiter">'</span><span class="content">build/site</span><span class="delimiter">'</span></span>)) {
+            into <span class="string"><span class="delimiter">'</span><span class="content">.</span><span class="delimiter">'</span></span>
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>replacing <code>GIT_CLONE_URI</code> is the URL used to clone your repo.</p>
+</div>
+<div class="paragraph">
+<p>Then, add the following to the bottom of your main <code>build.gradle</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">task publishSite(<span class="key">type</span>: GradleBuild, <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">Publishing</span><span class="delimiter">'</span></span>, <span class="key">description</span>: <span class="string"><span class="delimiter">'</span><span class="content">Publishes the documentation web site.</span><span class="delimiter">'</span></span>, <span class="key">dependsOn</span>: [<span class="string"><span class="delimiter">'</span><span class="content">site</span><span class="delimiter">'</span></span>]) {
+    buildFile = <span class="string"><span class="delimiter">'</span><span class="content">publish.gradle</span><span class="delimiter">'</span></span>
+    tasks = [<span class="string"><span class="delimiter">'</span><span class="content">publishGhPages</span><span class="delimiter">'</span></span>]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These modification provide a simple means of publishing the rendered site content to the <code>gh-pages</code> branch of your project, which GitHub will pick
+up by default and use as your project web site.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+You can read more about this functionality by reading <a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/">Configuring a Publishing Source for GitHub Pages</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_eating_my_own_dog_food">Eating My Own Dog Food</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since this plugin was created to replace duplication in my own code, it is one that I use in most of my projects, including this one. It makes for an
+interesting integration test when you release a project and then use it for its own site generation&#8230;&#8203; keeps you honest.</p>
+</div>
+<div class="paragraph">
+<p>Likewise, using the plugin for this project, means that this project is a good example of how it may be used as well as some ideas about the site
+landing page content itself (<code>index.html</code> page).</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.0.1<br>
-Last updated 2017-03-19 16:03:00 -05:00
+Version 0.0.2<br>
+Last updated 2017-03-20 19:20:15 -05:00
 </div>
 </div>
 </body>

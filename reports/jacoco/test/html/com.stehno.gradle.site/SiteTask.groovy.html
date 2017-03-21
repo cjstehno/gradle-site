@@ -33,44 +33,45 @@ class SiteTask extends DefaultTask {
 <span class="fc" id="L33">        SiteExtension siteExtension = project.extensions.findByType(SiteExtension)</span>
 
 <span class="fc bfc" id="L35" title="All 2 branches covered.">        if (project.file(siteExtension.srcDir).exists()) {</span>
-            // TODO: allow config of additional replacement vars
-
             // copy the templates
-<span class="fc" id="L39">            project.copy {</span>
-<span class="fc" id="L40">                from siteExtension.srcDir</span>
-<span class="fc" id="L41">                into siteExtension.buildDir</span>
-<span class="fc" id="L42">                include '**/*.html'</span>
-<span class="pc" id="L43">                expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)])</span>
+<span class="fc" id="L37">            project.copy {</span>
+<span class="fc" id="L38">                from siteExtension.srcDir</span>
+<span class="fc" id="L39">                into siteExtension.buildDir</span>
+<span class="fc" id="L40">                include '**/*.html'</span>
+<span class="pc" id="L41">                expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)] + siteExtension.variables)</span>
             }
 
             // copy the assets (no variable replacement)
-<span class="fc" id="L47">            project.copy {</span>
-<span class="fc" id="L48">                from siteExtension.srcDir</span>
-<span class="fc" id="L49">                into siteExtension.buildDir</span>
-<span class="fc" id="L50">                include '**/css/**'</span>
-<span class="fc" id="L51">                include '**/js/**'</span>
-<span class="pc" id="L52">                include '**/img/**'</span>
+<span class="fc" id="L45">            project.copy {</span>
+<span class="fc" id="L46">                from siteExtension.srcDir</span>
+<span class="fc" id="L47">                into siteExtension.buildDir</span>
+<span class="fc" id="L48">                include '**/css/**'</span>
+<span class="fc" id="L49">                include '**/js/**'</span>
+<span class="fc" id="L50">                include '**/img/**'</span>
+<span class="pc" id="L51">                siteExtension.assetDirs.each { dir-&gt;</span>
+<span class="nc" id="L52">                    include dir</span>
+                }
             }
 
             // copy the build reports
-<span class="fc" id="L56">            project.copy {</span>
-<span class="fc" id="L57">                from 'build/reports'</span>
-<span class="fc" id="L58">                include '**/**'</span>
-<span class="pc" id="L59">                into &quot;${siteExtension.buildDir}/reports&quot;</span>
+<span class="fc" id="L57">            project.copy {</span>
+<span class="fc" id="L58">                from 'build/reports'</span>
+<span class="fc" id="L59">                include '**/**'</span>
+<span class="pc" id="L60">                into &quot;${siteExtension.buildDir}/reports&quot;</span>
             }
 
             // copy the docs
-<span class="fc" id="L63">            project.copy {</span>
-<span class="fc" id="L64">                from 'build/docs'</span>
-<span class="fc" id="L65">                include '**/**'</span>
-<span class="pc" id="L66">                into &quot;${siteExtension.buildDir}/docs&quot;</span>
+<span class="fc" id="L64">            project.copy {</span>
+<span class="fc" id="L65">                from 'build/docs'</span>
+<span class="fc" id="L66">                include '**/**'</span>
+<span class="pc" id="L67">                into &quot;${siteExtension.buildDir}/docs&quot;</span>
             }
 
             // copy the asciidocs
-<span class="fc" id="L70">            project.copy {</span>
-<span class="fc" id="L71">                from 'build/asciidoc'</span>
-<span class="fc" id="L72">                include '**/**'</span>
-<span class="pc" id="L73">                into &quot;${siteExtension.buildDir}/asciidoc&quot;</span>
+<span class="fc" id="L71">            project.copy {</span>
+<span class="fc" id="L72">                from 'build/asciidoc'</span>
+<span class="fc" id="L73">                include '**/**'</span>
+<span class="pc" id="L74">                into &quot;${siteExtension.buildDir}/asciidoc&quot;</span>
             }
         }
     }
