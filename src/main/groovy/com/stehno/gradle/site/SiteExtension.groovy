@@ -35,25 +35,26 @@ class SiteExtension {
      */
     String siteUrl
 
-    /**
-     * Additional paths to be tested against the deployed documentation site.
-     */
-    List<String> testedPaths = []
+    private final List<String> testedPaths = []
+    private final List<String> versionedFiles = []
+    private final Map<String, Object> variables = [:]
+    private final List<Map<String, Object>> assetDirs = []
 
-    /**
-     * Additional files which may contain documented version information to be managed.
-     */
-    List<String> versionedFiles = []
+    List<String> getTestedPaths() {
+        testedPaths.asImmutable()
+    }
 
-    /**
-     * Additional site template variable replacements.
-     */
-    Map<String, Object> variables = [:]
+    List<String> getVersionedFiles() {
+        versionedFiles.asImmutable()
+    }
 
-    /**
-     * Additional site asset directories to be copied into the site build directory (un-processed).
-     */
-    List<String> assetDirs = []
+    Map<String, Object> getVariables() {
+        variables.asImmutable()
+    }
+
+    List<Map<String, Object>> getAssetDirs() {
+        assetDirs.asImmutable()
+    }
 
     /**
      * Adds a file that may contain documented version information to be managed.
@@ -95,9 +96,10 @@ class SiteExtension {
     /**
      * Used to specify an additional asset directory to be copied (un-processed) into the site build directory.
      *
+     * @param attrs additional asset information ("into", "external", and "replace" supported)
      * @param dir the added directory (under the site source dir) - ant patterns are allowed
      */
-    void assetDir(final String dir){
-        assetDirs << dir
+    void assetDir(final Map<String, Object> attrs = [:], final String dir) {
+        assetDirs << ([dir: dir] + attrs)
     }
 }

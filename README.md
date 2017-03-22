@@ -24,7 +24,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.stehno.gradle:site:0.0.2"
+    classpath "gradle.plugin.com.stehno.gradle:site:0.0.3"
   }
 }
 
@@ -35,10 +35,10 @@ Build script snippet for new, incubating, plugin mechanism introduced in Gradle 
 
 ```groovy
 plugins {
-  id "com.stehno.gradle.site" version "0.0.2"
+  id "com.stehno.gradle.site" version "0.0.3"
 }
 ```
 
 ## Usage
 
-See the http://stehno.com/gradle-site/asciidoc/html5/[User Guide] for configuration and usage information.
+See the [User Guide](http://stehno.com/gradle-site/asciidoc/html5/) for configuration and usage information.

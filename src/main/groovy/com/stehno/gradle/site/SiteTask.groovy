@@ -32,13 +32,17 @@ class SiteTask extends DefaultTask {
 
         SiteExtension siteExtension = project.extensions.findByType(SiteExtension)
 
+        // TODO: add asset into and replace support "into" , replace, external
+
         if (project.file(siteExtension.srcDir).exists()) {
+            def vars = [project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)] + siteExtension.variables
+
             // copy the templates
             project.copy {
                 from siteExtension.srcDir
                 into siteExtension.buildDir
                 include '**/*.html'
-                expand([project_version: project.version, year: Calendar.instance.get(Calendar.YEAR)] + siteExtension.variables)
+                expand vars
             }
 
             // copy the assets (no variable replacement)
@@ -48,8 +52,17 @@ class SiteTask extends DefaultTask {
                 include '**/css/**'
                 include '**/js/**'
                 include '**/img/**'
-                siteExtension.assetDirs.each { dir->
-                    include dir
+            }
+
+            // copy any added assets
+            siteExtension.assetDirs.each { asset ->
+                project.copy {
+                    from asset.external ? asset.dir : siteExtension.srcDir
+                    into (siteExtension.buildDir + (asset.into ? '/' + asset.into : ''))
+                    include asset.external ? '**/**' : asset.dir
+                    if (asset.replace) {
+                        expand vars
+                    }
                 }
             }
 
