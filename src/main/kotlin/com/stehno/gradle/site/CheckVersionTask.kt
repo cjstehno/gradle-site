@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2017 Christopher J. Stehno <chris@stehno.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,23 +22,29 @@ import org.gradle.api.tasks.TaskAction
  * The "checkVersion" used to check if the expected files contain the correct version information (which is configured in the build.gradle file
  * version property). This check is done fairly loosely as a simple check of whether or not the expected version string appears in the file content.
  */
-class CheckVersionTask extends DefaultTask {
+open class CheckVersionTask : DefaultTask() {
 
-    static final String NAME = 'checkVersion'
+    companion object {
+        const val NAME = "checkVersion"
+    }
 
-    @TaskAction @SuppressWarnings('GroovyUnusedDeclaration') void checkVersion() {
-        logger.lifecycle "Verifying that the documentation references version ${project.version}..."
+    @TaskAction
+    fun checkVersion() {
+        logger.lifecycle("Verifying that the documentation references version ${project.version}...")
 
-        SiteExtension extension = project.extensions.findByType(SiteExtension)
+        val extension = project.extensions.findByType(SiteExtension::class.java)
+
+        val files = mutableListOf("README.md")
+        files.addAll(extension!!.versionedFiles)
 
         // Not the most efficient way to do this but should be ok for now
-        boolean documented = (['README.md'] + extension.versionedFiles).every { f ->
-            File file = project.file(f)
-            boolean ok = !file.exists() || file.text.contains(project.version)
-            logger.info " - Checking: $f: $ok"
+        val documented = files.all { f ->
+            val file = project.file(f)
+            val ok = !file.exists() || file.readText(Charsets.UTF_8).contains(project.version.toString())
+            logger.info(" - Checking: $f: $ok")
             ok
         }
 
-        assert documented, 'The documented project version does not match the project version: Run "updateVersion -Pfrom=<old-version>" and try again.'
+        assert(documented) { "The documented project version does not match the project version: Run \"updateVersion -Pfrom=<old-version>\" and try again." }
     }
 }

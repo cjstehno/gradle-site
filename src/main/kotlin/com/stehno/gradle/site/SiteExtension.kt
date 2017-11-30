@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2017 Christopher J. Stehno <chris@stehno.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,61 +18,41 @@ package com.stehno.gradle.site
 /**
  * Configuration for the plugin tasks.
  */
-class SiteExtension {
+open class SiteExtension {
 
     /**
      * The directory where the site source content resides. This defaults to "src/site".
      */
-    String srcDir = 'src/site'
+    var srcDir = "src/site"
 
     /**
      * The directory where the built site content will be generated. This defaults to "build/site".
      */
-    String buildDir = 'build/site'
+    var buildDir = "build/site"
 
     /**
      * The URL for the deployed documentation site, to be used in content verification.
      */
-    String siteUrl
+    lateinit var siteUrl: String
 
-    private final List<String> testedPaths = []
-    private final List<String> versionedFiles = []
-    private final Map<String, Object> variables = [:]
-    private final List<Map<String, Object>> assetDirs = []
-
-    List<String> getTestedPaths() {
-        testedPaths.asImmutable()
-    }
-
-    List<String> getVersionedFiles() {
-        versionedFiles.asImmutable()
-    }
-
-    Map<String, Object> getVariables() {
-        variables.asImmutable()
-    }
-
-    List<Map<String, Object>> getAssetDirs() {
-        assetDirs.asImmutable()
-    }
+    val testedPaths = mutableListOf<String>()
+    val versionedFiles = mutableListOf<String>()
+    val variables = mutableMapOf<String, Any>()
+    val assetDirs = mutableListOf<AssetDir>()
 
     /**
      * Adds a file that may contain documented version information to be managed.
      *
      * @param file the file path string
      */
-    void versionedFile(final String file) {
-        versionedFiles << file
-    }
+    fun versionedFile(file: String) = versionedFiles.add(file)
 
     /**
      * Adds a path to be tested against the deployed documentation site.
      *
      * @param path the path to be tested
      */
-    void testedPath(final String path) {
-        testedPaths << path
-    }
+    fun testedPath(path: String) = testedPaths.add(path)
 
     /**
      * Adds the specified variable replacement to the site template generation.
@@ -80,7 +60,7 @@ class SiteExtension {
      * @param name the variable name
      * @param value the variable value
      */
-    void variable(final String name, final Object value) {
+    fun variable(name: String, value: Any) {
         variables[name] = value
     }
 
@@ -89,9 +69,7 @@ class SiteExtension {
      *
      * @param vars the map of variable replacements
      */
-    void variables(final Map<String, Object> vars) {
-        variables.putAll(vars)
-    }
+    fun variables(vars: Map<String, Any>) = variables.putAll(vars)
 
     /**
      * Used to specify an additional asset directory to be copied (un-processed) into the site build directory.
@@ -99,7 +77,15 @@ class SiteExtension {
      * @param attrs additional asset information ("into", "external", and "replace" supported)
      * @param dir the added directory (under the site source dir) - ant patterns are allowed
      */
-    void assetDir(final Map<String, Object> attrs = [:], final String dir) {
-        assetDirs << ([dir: dir] + attrs)
+    fun assetDir(attrs: Map<String, Any> = mapOf(), dir: String) {
+        assetDir(dir, attrs["into"].toString(), attrs["external"] as Boolean, attrs["replace"] as Boolean)
     }
+
+    fun assetDir(dir: String, into: String?, external: Boolean = false, replace: Boolean = false) {
+        assetDirs.add(AssetDir(dir, into, external, replace))
+    }
+
+    // FIXME: closure version
 }
+
+data class AssetDir(val dir: String, val into: String?, val external: Boolean, val replace: Boolean)

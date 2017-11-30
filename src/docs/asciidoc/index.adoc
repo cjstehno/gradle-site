@@ -56,7 +56,7 @@ This allows addition of local site previews on an embedded server with only the 
 
     ./gradlew startPreview
 
-More usage details can be found on the http://stehno.com/gradle-webpreview-plugin/[Web Preview Plugin] web site.
+More usage taskDetails can be found on the http://stehno.com/gradle-webpreview-plugin/[Web Preview Plugin] web site.
 
 === Task Dependencies
 
